@@ -1,0 +1,20 @@
+local map = vim.keymap.set
+
+map("n", "<leader>w", "<cmd>write<cr>", { desc = "Save file" })
+map("n", "<leader>q", "<cmd>quit<cr>", { desc = "Quit" })
+map("n", "<leader>Q", "<cmd>quit!<cr>", { desc = "Quit without saving" })
+map("n", "<leader>ff", "<cmd>Pick files<cr>", { desc = "Find files" })
+map("n", "<leader>fg", "<cmd>Pick live_grep<cr>", { desc = "Find text" })
+map("n", "<leader>fb", "<cmd>Pick buffers<cr>", { desc = "Find buffers" })
+map("n", "<leader>fh", "<cmd>Pick help_tags<cr>", { desc = "Find help tags" })
+
+map("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation" })
+map("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+map("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
+map("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
+map("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
+map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
+map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostics" })
+map("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
+map("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })

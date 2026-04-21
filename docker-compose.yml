@@ -1,0 +1,61 @@
+services:
+  neovim:
+    build:
+      context: ./neovim/
+    depends_on:
+    - firewall
+    network_mode: "service:firewall"
+    environment:
+      HTTP_PROXY: http://127.0.0.1:3128
+      HTTPS_PROXY: http://127.0.0.1:3128
+      NO_PROXY: localhost,127.0.0.1,.internal
+    security_opt:
+    - no-new-privileges:true
+    cap_drop:
+    - ALL
+    command: ["sleep", "infinity"]
+    healthcheck:
+      test: ["CMD", "squid", "-k", "check"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  firewall:
+    build:
+      context: ./firewall/
+    container_name: firewall
+    cap_drop:
+    - ALL
+    cap_add:
+    - NET_ADMIN
+    - NET_RAW
+    - SETUID
+    - SETGID
+    - SYSLOG
+    sysctls:
+      net.ipv4.ip_forward: "1"
+    networks:
+      egress_net:
+    volumes:
+    - ./firewall/start.sh:/start.sh:ro
+    - ./firewall/nftables.conf:/etc/nftables.conf:ro
+    - ./firewall/squid.conf:/etc/squid/squid.conf:ro
+    - ./firewall/whitelist_domains.txt:/etc/squid/whitelist_domains.txt:ro
+    - ./firewall/resolv.conf:/etc/resolv.conf:ro
+    read_only: true
+    dns:
+    - 9.9.9.9
+    - 149.112.112.112
+    tmpfs:
+    - /tmp
+    - /run
+    - /var/run
+    - /var/cache/squid:uid=31,gid=31
+    - /var/spool/squid:uid=31,gid=31
+    - /var/log/squid:mode=0755
+    command: ["/bin/sh", "start.sh"]  
+
+networks:
+  egress_net:
+    driver: bridge
