@@ -8,18 +8,15 @@ services:
     environment:
       HTTP_PROXY: http://127.0.0.1:3128
       HTTPS_PROXY: http://127.0.0.1:3128
-      NO_PROXY: localhost,127.0.0.1,.internal
+      NO_PROXY: localhost,127.0.0.1
     security_opt:
     - no-new-privileges:true
+    volumes:
+    - ./data:/home/nvim/data
+    - ../.claude:/home/nvim/.claude
     cap_drop:
     - ALL
     command: ["sleep", "infinity"]
-    healthcheck:
-      test: ["CMD", "squid", "-k", "check"]
-      interval: 2s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
 
   firewall:
     build:
